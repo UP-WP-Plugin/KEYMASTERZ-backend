@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
   if (!signature) {
     res.status(420).send({ message: 'Signature not found!' });
   }
-  
+
   const msgBuffer = ethUtil.toBuffer(msg);
   const msgHash = ethUtil.hashPersonalMessage(msgBuffer);
   const signatureBuffer = ethUtil.toBuffer(signature);
@@ -28,13 +28,20 @@ router.post('/', (req, res, next) => {
   const addressBuffer = ethUtil.publicToAddress(publicKey);
   const address = ethUtil.bufferToHex(addressBuffer);
 
-  if(address.toLowerCase() === publicAddress.toLowerCase()) {
-    res.send({
-      approve: `Nonce ${msg} was signed with the address ${publicAddress}`
-    });
+  if (address.toLowerCase() === publicAddress.toLowerCase()) {
+    if (address.toLowerCase() === '0x6a0e62776530d9f9b73463f20e34d0f9fe5feed1') {
+      res.send({
+        approve: `You are an admin!`
+      })
+    }
+    else {
+      res.send({
+        approve: `Nonce ${msg} was signed with the address ${publicAddress}`
+      });
+    }
   }
   else {
-    res.status(421).send({ message: `Nonce ${msg} was not signed by ${publicAddress}` });
+    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress}` });
   }
 
 });
