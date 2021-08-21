@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var ethUtil = require('ethereumjs-util');
+var Web3 = require('web3');
 
 /* POST user signature. */
 router.post('/', (req, res, next) => {
   const { publicAddress, signature } = req.body;
-  const msg = `${req.app.locals.data[publicAddress]}`;
+  const msg = Web3.utils.utf8ToHex(`${req.app.locals.data[publicAddress]}`);
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
