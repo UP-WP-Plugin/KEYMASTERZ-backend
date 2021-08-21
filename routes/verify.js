@@ -5,7 +5,7 @@ var ethUtil = require('ethereumjs-util');
 /* POST user signature. */
 router.post('/', (req, res, next) => {
   const { publicAddress, signature } = req.body;
-  const msg = req.app.locals.data[publicAddress];
+  const msg = `${req.app.locals.data[publicAddress]}`;
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
