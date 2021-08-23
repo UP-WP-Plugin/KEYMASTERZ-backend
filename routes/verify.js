@@ -32,11 +32,15 @@ router.post('/', (req, res, next) => {
 
   if (address.toLowerCase() === publicAddress.toLowerCase()) {
     if (address.toLowerCase() === '0x6a0e62776530d9f9b73463f20e34d0f9fe5feed1') {
-      res.sendFile('Para.js');
+      res.send({
+        verified: true,
+        admin: true
+      })
     }
     else {
       res.send({
-        approve: `Nonce ${msg} was signed with the address ${publicAddress}`
+        verified: true,
+        admin: false
       });
     }
   }
