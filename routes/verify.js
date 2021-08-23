@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var ethUtil = require('ethereumjs-util');
 var Web3 = require('web3');
+const app = express();
+app.use(express.static('public'));
 
 /* POST user signature. */
 router.post('/', (req, res, next) => {
@@ -30,9 +32,7 @@ router.post('/', (req, res, next) => {
 
   if (address.toLowerCase() === publicAddress.toLowerCase()) {
     if (address.toLowerCase() === '0x6a0e62776530d9f9b73463f20e34d0f9fe5feed1') {
-      res.send({
-        approve: `You are an admin!`
-      })
+      res.sendFile('Para.js');
     }
     else {
       res.send({
