@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var ethUtil = require('ethereumjs-util');
 var Web3 = require('web3');
-const app = express();
-app.use(express.static('public'));
 
 /* POST user signature. */
 router.post('/', (req, res, next) => {
