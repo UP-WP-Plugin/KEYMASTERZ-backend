@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var nonceRouter = require('./routes/nonce');
 var verifyRouter = require('./routes/verify');
 
+const cors = require('cors');
+
 var app = express();
 app.locals.data = {};
 
@@ -20,6 +22,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+)
 
 app.use('/', indexRouter);
 app.use('/nonce', nonceRouter);
