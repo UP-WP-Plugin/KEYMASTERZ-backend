@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Web3 = require('web3');
-var LSP0ERC725Account = require('@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json');
 
 /* POST user nonce. */
 router.post('/', (req, res, next) => {
@@ -12,10 +10,7 @@ router.post('/', (req, res, next) => {
     res.status(418).send({ message: 'User address not found!' });
   }
   else {
-    req.app.locals.data[publicAddress] = {
-      nonce,
-      UPContract: new Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress)
-    };
+    req.app.locals.data[publicAddress] = nonce;
   }
 
   res.send({
