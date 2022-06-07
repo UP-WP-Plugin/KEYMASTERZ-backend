@@ -2,11 +2,14 @@ var express = require('express');
 var router = express.Router();
 var ethUtil = require('ethereumjs-util');
 var Web3 = require('web3');
+var LSP0ERC725Account = require('@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json');
 
 /* POST user signature. */
 router.post('/', (req, res, next) => {
   const { publicAddress, signature } = req.body;
   const msg = Web3.utils.utf8ToHex(`${req.app.locals.data[publicAddress]}`);
+  const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress);
+  const UPOwner = await UPContract.methods.owner().call();
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
@@ -28,7 +31,7 @@ router.post('/', (req, res, next) => {
   const addressBuffer = ethUtil.publicToAddress(publicKey);
   const address = ethUtil.bufferToHex(addressBuffer);
 
-  if (address.toLowerCase() === publicAddress.toLowerCase()) {
+  if (address.toLowerCase() === UPOwner.toLowerCase()) {
     if (address.toLowerCase() === '0x6a0e62776530d9f9b73463f20e34d0f9fe5feed1') {
       res.send({
         verified: true,
@@ -43,7 +46,7 @@ router.post('/', (req, res, next) => {
     }
   }
   else {
-    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress}, it was signed by ${address}` });
+    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress} or ${UPOwner}` });
   }
 
 });
