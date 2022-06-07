@@ -43,7 +43,7 @@ router.post('/', (req, res, next) => {
     }
   }
   else {
-    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress}` });
+    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress}, it was signed by ${address}` });
   }
 
 });
