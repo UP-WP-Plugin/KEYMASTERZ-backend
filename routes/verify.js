@@ -10,8 +10,10 @@ router.post('/', async (req, res, next) => {
   const { publicAddress, signature } = req.body;
   const msg = Web3.utils.utf8ToHex(`${req.app.locals.data[publicAddress]}`);
   
-  const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress)
-  const UPOwner = await UPContract.methods.owner().call();
+  /*const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress);
+  const UPOwner = await UPContract.methods.owner().call();*/
+  const UPOwner = await Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress)
+  .then(async res => res.methods.owner().call());
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
