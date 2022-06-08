@@ -1,19 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var debug = require('debug')('app');
 var ethUtil = require('ethereumjs-util');
 var Web3 = require('web3');
 var LSP0ERC725Account = require('@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json');
+
+const getOwner = async (UPAddress) => {
+  const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, UPAddress);
+  const UPOwner = await UPContract.methods.owner().call();
+  return(UPOwner);
+} 
 
 /* POST user signature. */
 router.post('/', async (req, res, next) => {
   const { publicAddress, signature } = req.body;
   const msg = Web3.utils.utf8ToHex(`${req.app.locals.data[publicAddress]}`);
   
-  /*const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress);
-  const UPOwner = await UPContract.methods.owner().call();*/
-  const UPOwner = await Web3.eth.Contract(LSP0ERC725Account.abi, publicAddress)
-  .then(async res => res.methods.owner().call());
+  const UPOwner = await getOwner(publicAddress);
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
