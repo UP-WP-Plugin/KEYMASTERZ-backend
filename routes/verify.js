@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var ethUtil = require('ethereumjs-util');
 var Web3 = require('web3');
+var web3 = new Web3('https://rpc.l14.lukso.network');
 var LSP0ERC725Account = require('@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json');
 
 const getOwner = async (UPAddress) => {
-  const UPContract = new Web3.eth.Contract(LSP0ERC725Account.abi, UPAddress);
+  const UPContract = new web3.eth.Contract(LSP0ERC725Account.abi, UPAddress);
   const UPOwner = await UPContract.methods.owner().call();
   return(UPOwner);
-} 
+}
 
 /* POST user signature. */
 router.post('/', async (req, res, next) => {
