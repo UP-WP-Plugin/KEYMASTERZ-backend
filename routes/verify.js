@@ -53,7 +53,9 @@ router.post('/', async (req, res, next) => {
     }
   }
   else {
-    res.status(421).send({ message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress} or ${UPOwner}` });
+    res.status(421).send({ 
+      message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by ${publicAddress} or ${UPOwner.toLowerCase()} but by ${address.toLowerCase()}`
+    });
   }
 
 });
