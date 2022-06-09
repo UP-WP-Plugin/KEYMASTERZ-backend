@@ -24,9 +24,9 @@ const getControllers = async (UPAddress) => {
   return(controllerAddresses);
 }
 
-const checkControllers = (UPControllers, signerAddress) => {
-  for (var i = 0; i < UPControllers.length; i++) {
-    if (UPControllers[i].toLowerCase() === signerAddress.toLowerCase()) {
+const checkIfAddressIsInsideTheArray = (arrayOfAddresses, address) => {
+  for (var i = 0; i < arrayOfAddresses.length; i++) {
+    if (arrayOfAddresses[i].toLowerCase() === address.toLowerCase()) {
       return true;
     }
   }
@@ -39,6 +39,7 @@ router.post('/', async (req, res, next) => {
   const msg = Web3.utils.utf8ToHex(`${req.app.locals.data[publicAddress]}`);
   
   const UPControllers = await getControllers(publicAddress);
+  const UPAdmins = ["0x787679F359117f82a715bC1aD8E1dfd96c1F484a"]
 
   if (!publicAddress) {
     res.status(419).send({ message: 'Address not found!' });
@@ -60,8 +61,8 @@ router.post('/', async (req, res, next) => {
   const addressBuffer = ethUtil.publicToAddress(publicKey);
   const address = ethUtil.bufferToHex(addressBuffer);
 
-  if (checkControllers(UPControllers, address)) {
-    if (address.toLowerCase() === '0x6a0e62776530d9f9b73463f20e34d0f9fe5feed1') {
+  if (checkIfAddressIsInsideTheArray(UPControllers, address)) {
+    if (checkIfAddressIsInsideTheArray(UPAdmins, publicAddress)) {
       res.send({
         verified: true,
         admin: true
@@ -76,7 +77,9 @@ router.post('/', async (req, res, next) => {
   }
   else {
     res.status(421).send({ 
-      message: `Nonce ${Web3.utils.hexToUtf8(msg)} was not signed by a ${publicAddress} controller.`
+      message: `Nonce was not signed by a controller of this Universal Profile.`,
+      verified: false,
+      admin: false
     });
   }
 
